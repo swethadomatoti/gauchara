@@ -151,7 +151,7 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8081",
     "http://192.168.0.249:8081",
-     
+    "https://gauchara-fe.onrender.com"
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -164,9 +164,10 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8081",
     "http://192.168.0.249:8081",
+    "https://gauchara-fe.onrender.com"
      
 ]
-
+ 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
