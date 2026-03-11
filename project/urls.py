@@ -24,11 +24,7 @@ urlpatterns = [
     path('gallery/<int:pk>/',views.GallaryView.as_view(),name='gallery-detail'),
     path('program/',views.ProgramView.as_view(),name='program'),
     path('program/<int:pk>/',views.ProgramView.as_view(),name='program-detail'),
-    # path('razorpay/',views.create_razorpay_order,name='razorpay'),
-    # path('razorpaywebhook/',views.razorpay_webhook,name='rawebhook'),
-    # path('paypal/',views.create_paypal_payment,name='paypal'),
-    # path('QR/',views.upi_qr_code,name='qrcode'),
-    # path('upi/',views.create_upi_donation,name='upi'),
+   
     path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),  
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),       
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
