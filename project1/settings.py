@@ -165,7 +165,8 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8081",
     "http://192.168.0.249:8081",
-    "https://gauchara-fe.onrender.com"
+    "https://gauchara-fe.onrender.com",
+    "https://gauchara-8368.onrender.com",
      
 ]
  
@@ -181,7 +182,9 @@ REST_FRAMEWORK = {
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
  
 
