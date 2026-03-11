@@ -19,7 +19,7 @@ class Post(models.Model):
     excerpt = models.TextField(blank=True, null=True)
     content = models.TextField()
     # Hybrid field — can store upload file path or remote URL string
-    featured_image = models.ImageField(upload_to='uploads/', blank=True, null=True)
+    featured_image = models.ImageField(upload_to='uploads/', blank=True, null=True,max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
