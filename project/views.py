@@ -16,6 +16,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.decorators import method_decorator
 from django.conf import settings
+from .task import send_contact_email
  
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -150,14 +151,24 @@ class ContactMessageView(APIView):
 
     def post(self, request):
         serializer = ContactMessageSerializer(data=request.data)
+
         if serializer.is_valid():
-            serializer.save()
+            message = serializer.save()   # save message in database
+            # trigger celery email task
+            send_contact_email.delay(
+            message.name,
+            message.email,
+            message.phone,
+            message.subject,
+            message.message
+              )
+
             return Response(
-                {"message": "Thank you for contacting us! We'll get back to you soon."},
-                status=status.HTTP_201_CREATED
+            {"message": "Thank you for contacting us! We'll get back to you soon."},
+            status=status.HTTP_201_CREATED
             )
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
     def delete(self, request, pk):
         try:
             message = ContactMessage.objects.get(pk=pk)

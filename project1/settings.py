@@ -186,5 +186,16 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
- 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'swethadomatoti@gmail.com'
+#savadiafoundation@gmail.com viqolwgghbtdggvt
+EMAIL_HOST_PASSWORD = 'vikejxmcrmctqkaq'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER 
+#redis://red-d6q3oo9aae7s73bkfh6g:6379
+CELERY_BROKER_URL = os.environ.get("REDIS_URL")
+CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL")
