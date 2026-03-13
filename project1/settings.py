@@ -193,7 +193,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = 'swethadomatoti@gmail.com'
-#savadiafoundation@gmail.com viqolwgghbtdggvt
+#email of gauchara:savadiafoundation@gmail.com Password:viqolwgghbtdggvt 
 EMAIL_HOST_PASSWORD = 'vikejxmcrmctqkaq'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER 
 #redis://red-d6q3oo9aae7s73bkfh6g:6379

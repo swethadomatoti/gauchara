@@ -6,7 +6,7 @@ from django.conf import settings
 @shared_task
 def send_contact_email(name, email, phone, subject, message):
 
-    email_subject = f"New Contact Form Message: {subject}"  # Email subject
+    email_subject = f"New Contact Form Message: {subject}"   
 
     email_body = f"""
 New message received from contact form.
@@ -20,9 +20,9 @@ Message:
 """
 
     send_mail(
-        email_subject,                 # Subject
-        email_body,                    # Email body
-        settings.DEFAULT_FROM_EMAIL,   # Sender email
-        ["swetha@gmail.com"],          # Your email (receiver)
+        email_subject,                  
+        email_body,                     
+        settings.DEFAULT_FROM_EMAIL,    
+        ["swethadomatoti3@gmail.com"],         
         fail_silently=False,
     )
