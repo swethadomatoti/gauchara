@@ -187,17 +187,17 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
+DEFAULT_FROM_EMAIL = 'swethadomatoti3@gmail.com'
 
-EMAIL_HOST_USER = 'swethadomatoti@gmail.com'
 #email of gauchara:savadiafoundation@gmail.com Password:viqolwgghbtdggvt 
-EMAIL_HOST_PASSWORD = 'vikejxmcrmctqkaq'
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER 
+ 
 #redis://red-d6q3oo9aae7s73bkfh6g:6379
 REDIS_URL = os.environ.get("REDIS_URL")
 
-CELERY_BROKER_URL = REDIS_URL + "/0"
-CELERY_RESULT_BACKEND = REDIS_URL + "/0"
+CELERY_BROKER_URL = os.environ.get("REDIS_URL")
+CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL")
