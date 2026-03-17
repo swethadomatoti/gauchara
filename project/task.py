@@ -1,10 +1,9 @@
-from celery import shared_task
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from django.conf import settings
 
 
-@shared_task
+
 def send_contact_email(name, email, phone, subject, message):
     html_content = f"""
     <p><strong>New message received from contact form.</strong></p>
