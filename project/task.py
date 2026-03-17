@@ -24,3 +24,4 @@ def send_contact_email(name, email, phone, subject, message):
 
     sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
     sg.send(mail)
+     
