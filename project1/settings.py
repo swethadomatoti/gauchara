@@ -197,5 +197,7 @@ EMAIL_HOST_USER = 'swethadomatoti@gmail.com'
 EMAIL_HOST_PASSWORD = 'vikejxmcrmctqkaq'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER 
 #redis://red-d6q3oo9aae7s73bkfh6g:6379
-CELERY_BROKER_URL = os.environ.get("REDIS_URL")
-CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL")
+REDIS_URL = os.environ.get("REDIS_URL")
+
+CELERY_BROKER_URL = REDIS_URL + "/0"
+CELERY_RESULT_BACKEND = REDIS_URL + "/0"
