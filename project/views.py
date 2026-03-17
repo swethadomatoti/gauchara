@@ -155,7 +155,7 @@ class ContactMessageView(APIView):
         if serializer.is_valid():
             message = serializer.save()   # save message in database
             # trigger celery email task
-            send_contact_email.delay(
+            send_contact_email(
             message.name,
             message.email,
             message.phone,
