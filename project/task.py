@@ -28,7 +28,7 @@ def send_contact_email(name, email, phone, subject, message):
     except Exception as e:
         print(" EMAIL ERROR:", str(e))
 
-def send_donation_email(name, email, whatsapp_number, amount, payment_id, status):
+def send_donation_email(name, email, whatsapp_number, amount, status):
 
     print("EMAIL TRIGGERED:", status)
 
@@ -44,7 +44,6 @@ def send_donation_email(name, email, whatsapp_number, amount, payment_id, status
         <p>Email: {email}</p>
         <p>Your donation of ₹{amount} was successful.</p>
         <p>Status: {status}</p>
-        <p>Payment ID: {payment_id}</p>
         
         <p>🙏 Thank you for supporting Gau Seva</p>
         """
@@ -61,7 +60,6 @@ def send_donation_email(name, email, whatsapp_number, amount, payment_id, status
         <p>Email: {email}</p>
         <p>Status: {status}</p>
         <p>Your donation of ₹{amount} has failed.</p>
-        <p>Payment ID: {payment_id}</p>
         <p>Please try again.</p>
         """
 
@@ -81,7 +79,6 @@ def send_donation_email(name, email, whatsapp_number, amount, payment_id, status
     <p>Email: {email}</p>
     <p>WhatsApp: {whatsapp_number}</p>
     <p>Amount: ₹{amount}</p>
-    <p>Payment ID: {payment_id}</p>
     """
 
     admin_mail = Mail(
