@@ -35,6 +35,8 @@ def send_donation_email(name, email, whatsapp_number, amount, payment_id):
     user_html = f"""
     <h2>Thank You ❤️</h2>
     <p>Dear {name},</p>
+    <p>Your mail: {email}</p>
+    <p>Your whatsapp number: {whatsapp_number}</p>
     <p>Your donation of ₹{amount} is successful.</p>
     <p>Payment ID: {payment_id}</p>
     <br>
@@ -52,7 +54,7 @@ def send_donation_email(name, email, whatsapp_number, amount, payment_id):
         from_email=settings.DEFAULT_FROM_EMAIL,
         to_emails=["swethadomatoti3@gmail.com"],   
         subject="New Donation Received",
-        html_content=f"New donation from {name} ₹{amount}"
+        html_content=f"New donation from {name} {email} {whatsapp_number} ₹{amount}"
     )
 
     sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
