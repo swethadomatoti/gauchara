@@ -470,7 +470,6 @@ class DonationStatusUpdateView(APIView):
                 donation.email,
                 donation.whatsapp_number,
                 donation.final_amount,
-                donation.payment_id,
                 donation.payment_status
             )
 
