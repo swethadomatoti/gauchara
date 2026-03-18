@@ -40,6 +40,10 @@ def send_donation_email(name, email, whatsapp_number, amount, status):
         user_html = f"""
         <h2>Thank You ❤️</h2>
         <p>Dear {name},</p>
+            <div>
+             <p>We sincerely thank you for your generous contribution towards GAUCHARA.</p>
+            <p>Your support helps us provide care, food, and shelter etc.. to cows in need.</p>
+            </div>
         <p>Whatsapp: {whatsapp_number}</p>
         <p>Email: {email}</p>
         <p>Your donation of ₹{amount} was successful.</p>
@@ -56,6 +60,10 @@ def send_donation_email(name, email, whatsapp_number, amount, status):
         user_html = f"""
         <h2>Donation Failed</h2>
         <p>Dear {name},</p>
+            <div
+            <p>We regret to inform you that your donation could not be processed successfully.</p>
+            <p>This may be due to a payment issue or network interruption.</p>
+            </div>
         <p>Whatsapp: {whatsapp_number}</p>
         <p>Email: {email}</p>
         <p>Status: {status}</p>
