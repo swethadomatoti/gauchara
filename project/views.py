@@ -415,7 +415,7 @@ class DonationCreateView(APIView):
 
  
 class DonationListView(APIView):
-
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser]   #  only admin
 
     def get(self, request):
