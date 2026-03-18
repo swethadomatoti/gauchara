@@ -233,6 +233,10 @@ from rest_framework import serializers
 from . import models
 
 
+from rest_framework import serializers
+from .models import Donation
+
+
 class DonationSerializer(serializers.ModelSerializer):
 
     final_amount = serializers.DecimalField(
@@ -242,7 +246,7 @@ class DonationSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = models.Donation
+        model = Donation
         fields = '__all__'
 
     def validate(self, data):

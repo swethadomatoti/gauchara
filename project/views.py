@@ -5,7 +5,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 import json
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication  
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny ,IsAdminUser
 from .models import Post, ContactMessage , Cause, Program , Testimonial, volunteer, Category , Gallary , Category1 , Donation
 from .serializers import CustomTokenObtainPairSerializer,PostSerializer, ContactMessageSerializer ,CauseSerializer, ProgramSerializer, TestimonialSerializer, VolunteerSerializer , CategorySerializer , GallarySerializer , CategorySerializer1,DonationSerializer
 from rest_framework import status
@@ -386,9 +386,13 @@ class ProgramView(APIView):
         except Program.DoesNotExist:
             return Response({"error": "Program not found."}, status=status.HTTP_404_NOT_FOUND)
 
-class DonationView(APIView):
-    permission_classes = [AllowAny]
+
+class DonationCreateView(APIView):
+
+    permission_classes = [AllowAny]    
+
     def post(self, request):
+
         serializer = DonationSerializer(data=request.data)
 
         if serializer.is_valid():
@@ -396,26 +400,59 @@ class DonationView(APIView):
             selected = serializer.validated_data.get("selected_amount")
             custom = serializer.validated_data.get("custom_amount")
 
-            # decide final amount
             final_amount = custom if custom else selected
-
-            donation = serializer.save(final_amount=final_amount)
-
-            # AFTER PAYMENT SUCCESS ONLY
-            if donation.payment_status == "success":
-
-                send_donation_email(
-                    donation.full_name,
-                    donation.email,
-                    donation.whatsapp_number,
-                    donation.final_amount,
-                    donation.payment_id
-                )
+            donation = serializer.save(
+                final_amount=final_amount,
+                payment_status="pending"   
+            )
 
             return Response(
-                {"message": "Donation successful"},
+                {"message": "Donation submitted. Waiting for approval"},
                 status=status.HTTP_201_CREATED
             )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-   
+
+ 
+class DonationListView(APIView):
+
+    permission_classes = [IsAdminUser]   #  only admin
+
+    def get(self, request):
+
+        donations = Donation.objects.all().order_by('-created_at')
+
+        serializer = DonationSerializer(donations, many=True)
+
+        return Response(serializer.data)
+
+class DonationStatusUpdateView(APIView):
+
+    permission_classes = [IsAdminUser]
+
+    def patch(self, request, pk):
+
+        try:
+            donation = Donation.objects.get(pk=pk)
+        except Donation.DoesNotExist:
+            return Response({"error": "Not found"}, status=404)
+
+        new_status = request.data.get("payment_status")
+
+        if new_status not in ["pending", "success", "failed"]:
+            return Response({"error": "Invalid status"}, status=400)
+
+        donation.payment_status = new_status
+        donation.save()
+
+        if new_status in ["success", "failed"]:
+            send_donation_email(
+                donation.full_name,
+                donation.email,
+                donation.whatsapp_number,
+                donation.final_amount,
+                donation.payment_id,
+                donation.payment_status
+            )
+
+        return Response({"message": "Status updated"})
