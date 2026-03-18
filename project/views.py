@@ -427,7 +427,7 @@ class DonationListView(APIView):
         return Response(serializer.data)
 
 class DonationStatusUpdateView(APIView):
-
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser]
 
     def patch(self, request, pk):
