@@ -16,8 +16,8 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.decorators import method_decorator
 from django.conf import settings
-from .task import send_contact_email, send_donation_email
- 
+from .task import send_contact_email, send_donation_email, send_volunteer_email
+
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
@@ -285,9 +285,28 @@ class VolunteerView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     def post(self, request):
         serializer = VolunteerSerializer(data=request.data)
+
         if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Thank you for volunteering! We'll be in touch soon."}, status=status.HTTP_201_CREATED)
+            volunteer = serializer.save()
+
+            # Send email to admin
+            send_volunteer_email(
+                volunteer.full_name,
+                volunteer.age,
+                volunteer.email,
+                volunteer.phone,
+                volunteer.address,
+                volunteer.occupation,
+                volunteer.availability,
+                volunteer.skills,
+                volunteer.reason
+            )
+
+            return Response(
+                {"message": "Thank you for volunteering! We'll be in touch soon."},
+                status=status.HTTP_201_CREATED
+            )
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     def delete(self, request, pk):
         try:

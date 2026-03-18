@@ -95,3 +95,35 @@ def send_donation_email(name, email, whatsapp_number, amount, payment_id, status
 
     sg.send(user_mail)
     sg.send(admin_mail)
+    
+
+def send_volunteer_email(full_name, age, email, phone, address,
+                         occupation, availability, skills, reason):
+
+    print("VOLUNTEER EMAIL SENT TO ADMIN")
+
+    admin_html = f"""
+    <h2>New Volunteer Registration</h2>
+
+    <p><b>Name:</b> {full_name}</p>
+    <p><b>Age:</b> {age}</p>
+    <p><b>Email:</b> {email}</p>
+    <p><b>Phone:</b> {phone}</p>
+    <p><b>Address:</b> {address}</p>
+    <p><b>Occupation:</b> {occupation}</p>
+    <p><b>Availability:</b> {availability}</p>
+    <p><b>Skills:</b> {skills}</p>
+    <p><b>Reason:</b> {reason}</p>
+    """
+
+    message = Mail(
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to_emails=["swethadomatoti3@gmail.com"],  # ADMIN ONLY
+        subject="New Volunteer Application",
+        html_content=admin_html
+    )
+
+    sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
+    response = sg.send(message)
+
+    print("STATUS:", response.status_code) 
