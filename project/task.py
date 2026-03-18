@@ -49,13 +49,19 @@ def send_donation_email(name, email, whatsapp_number, amount, payment_id):
         subject="Donation Successful",
         html_content=user_html
     )
-
-    admin_mail = Mail(
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to_emails=["swethadomatoti3@gmail.com"],   
-        subject="New Donation Received",
-        html_content=f"New donation from {name} {email} {whatsapp_number} ₹{amount}"
-    )
+    # ---------- EMAIL TO ADMIN ---------- 
+    admin_html = f""" <h2>New Donation Received</h2> 
+    <p>Name: {name}</p> 
+    <p>Email: {email}</p> 
+    <p>whatsapp_number: {whatsapp_number}
+    </p> <p>Amount: ₹{amount}</p> 
+    <p>Payment ID: {payment_id}</p> """ 
+    admin_mail = Mail( 
+                      from_email=settings.DEFAULT_FROM_EMAIL, 
+                      to_emails="swethadomatoti3@gmail.com", 
+                      subject="New Donation Received", 
+                      html_content=admin_html 
+                      )
 
     sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
 
