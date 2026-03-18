@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication  
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from .models import Post, ContactMessage , Cause, Program , Testimonial, volunteer, Category , Gallary , Category1 , Donation
-from .serializers import CustomTokenObtainPairSerializer,PostSerializer, ContactMessageSerializer ,CauseSerializer, ProgramSerializer, TestimonialSerializer, VolunteerSerializer , CategorySerializer , GallarySerializer , CategorySerializer1
+from .serializers import CustomTokenObtainPairSerializer,PostSerializer, ContactMessageSerializer ,CauseSerializer, ProgramSerializer, TestimonialSerializer, VolunteerSerializer , CategorySerializer , GallarySerializer , CategorySerializer1,DonationSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -16,7 +16,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.decorators import method_decorator
 from django.conf import settings
-from .task import send_contact_email
+from .task import send_contact_email, send_donation_email
  
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -385,4 +385,37 @@ class ProgramView(APIView):
             return Response({"message": "Program deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
         except Program.DoesNotExist:
             return Response({"error": "Program not found."}, status=status.HTTP_404_NOT_FOUND)
+
+class DonationView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        serializer = DonationSerializer(data=request.data)
+
+        if serializer.is_valid():
+
+            selected = serializer.validated_data.get("selected_amount")
+            custom = serializer.validated_data.get("custom_amount")
+
+            # decide final amount
+            final_amount = custom if custom else selected
+
+            donation = serializer.save(final_amount=final_amount)
+
+            # AFTER PAYMENT SUCCESS ONLY
+            if donation.payment_status == "success":
+
+                send_donation_email(
+                    donation.full_name,
+                    donation.email,
+                    donation.whatsapp_number,
+                    donation.final_amount,
+                    donation.payment_id
+                )
+
+            return Response(
+                {"message": "Donation successful"},
+                status=status.HTTP_201_CREATED
+            )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
    

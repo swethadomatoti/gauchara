@@ -170,13 +170,42 @@ class Program(models.Model):
     file_image =models.ImageField(upload_to='uploads/', blank=True, null=True)
     url_image = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
 
 class Donation(models.Model):
-    donor_name = models.CharField(max_length=100)
-    donor_email = models.EmailField()
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    payment_method = models.CharField(max_length=50)  # Razorpay, PayPal, GPay, PhonePe, Paytm
-    payment_status = models.CharField(max_length=20, default='Pending')  # Pending, Success, Failed
-    transaction_id = models.CharField(max_length=100, blank=True, null=True)
+
+    full_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    whatsapp_number = models.CharField(max_length=15, blank=True, null=True)
+    pan_number = models.CharField(max_length=20, blank=True, null=True)
+
+    selected_amount = models.IntegerField(
+        choices=[
+            (500, "₹500"),
+            (1000, "₹1000"),
+            (2500, "₹2500"),
+            (5000, "₹5000"),
+            (10000, "₹10000"),
+            (25000, "₹25000"),
+        ],
+        blank=True,
+        null=True
+    )
+
+    custom_amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+
+    final_amount = models.DecimalField(max_digits=10, decimal_places=2)
+
+    payment_id = models.CharField(max_length=255, blank=True, null=True)
+
+    payment_status = models.CharField(
+        max_length=20,
+        choices=[
+            ('pending', 'Pending'),
+            ('success', 'Success'),
+            ('failed', 'Failed')
+        ],
+        default='pending'
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)

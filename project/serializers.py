@@ -224,3 +224,35 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             'is_superuser': user.is_superuser,
         }
         return data
+    
+    
+
+
+
+from rest_framework import serializers
+from . import models
+
+
+class DonationSerializer(serializers.ModelSerializer):
+
+    final_amount = serializers.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        read_only=True   
+    )
+
+    class Meta:
+        model = models.Donation
+        fields = '__all__'
+
+    def validate(self, data):
+        selected = data.get("selected_amount")
+        custom = data.get("custom_amount")
+
+        if not selected and not custom:
+            raise serializers.ValidationError("Provide amount")
+
+        if selected and custom:
+            raise serializers.ValidationError("Only one amount allowed")
+
+        return data
