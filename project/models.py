@@ -201,9 +201,9 @@ class Donation(models.Model):
     payment_status = models.CharField(
         max_length=20,
         choices=[
-            ('pending', 'Pending'),
-            ('success', 'Success'),
-            ('failed', 'Failed')
+            ('pending', 'pending'),
+            ('success', 'success'),
+            ('failed', 'failed')
         ],
         default='pending'
     )

@@ -40,8 +40,12 @@ def send_donation_email(name, email, whatsapp_number, amount, payment_id, status
         user_html = f"""
         <h2>Thank You ❤️</h2>
         <p>Dear {name},</p>
+        <p>Whatsapp: {whatsapp_number}</p>
+        <p>Email: {email}</p>
         <p>Your donation of ₹{amount} was successful.</p>
+        <p>Status: {status}</p>
         <p>Payment ID: {payment_id}</p>
+        
         <p>🙏 Thank you for supporting Gau Seva</p>
         """
 
@@ -53,6 +57,9 @@ def send_donation_email(name, email, whatsapp_number, amount, payment_id, status
         user_html = f"""
         <h2>Donation Failed</h2>
         <p>Dear {name},</p>
+        <p>Whatsapp: {whatsapp_number}</p>
+        <p>Email: {email}</p>
+        <p>Status: {status}</p>
         <p>Your donation of ₹{amount} has failed.</p>
         <p>Payment ID: {payment_id}</p>
         <p>Please try again.</p>
