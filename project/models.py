@@ -42,8 +42,7 @@ class Post(models.Model):
         """Return URL for the featured image from Cloudinary."""
         if not self.featured_image:
             return None
-        # CloudinaryField automatically returns the Cloudinary URL
-        return str(self.featured_image.url) if hasattr(self.featured_image, 'url') else str(self.featured_image)
+        return str(self.featured_image)
     
 class ContactMessage(models.Model):
     name = models.CharField(max_length=100)   
@@ -114,14 +113,12 @@ class Testimonial(models.Model):
     @property
     def image(self):
         """
-        Unified image property: returns either the remote URL or the Cloudinary URL.
+        Unified image property: returns Cloudinary URL or remote URL.
         """
         if self.image_url:
-            # If a remote URL was provided
             return self.image_url
         elif self.image_file:
-            # If a file was uploaded to Cloudinary
-            return str(self.image_file.url) if hasattr(self.image_file, 'url') else str(self.image_file)
+            return str(self.image_file)
         return None
     
 class volunteer(models.Model):
@@ -149,11 +146,10 @@ class Gallary(models.Model):
     caption = models.CharField(max_length=255, blank=True, null=True)
     @property
     def image_url(self):
-        """Return the correct URL for the image from Cloudinary."""
+        """Return the Cloudinary URL for the image."""
         if not self.image:
             return None
-        # CloudinaryField automatically returns the Cloudinary URL
-        return str(self.image.url) if hasattr(self.image, 'url') else str(self.image)
+        return str(self.image)
 
 class Program(models.Model):
     title = models.CharField(max_length=200)

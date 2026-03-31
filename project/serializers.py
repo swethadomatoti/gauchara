@@ -3,6 +3,20 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+class CloudinaryURLField(serializers.Field):
+    """Serializer field for CloudinaryField that returns full URL"""
+    def to_representation(self, value):
+        if not value:
+            return None
+        # CloudinaryField returns a FieldFile object with .url property
+        if hasattr(value, 'url'):
+            return value.url
+        # Fallback: build URL from public ID if needed
+        return f"https://res.cloudinary.com/dmxfdt7ub/image/upload/{str(value)}" if value else None
+    
+    def to_internal_value(self, data):
+        return data
+
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CustomUser
@@ -18,6 +32,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     author = CustomUserSerializer(read_only=True)
+    featured_image = CloudinaryURLField(required=False, allow_null=True)
 
     class Meta:
         model = models.Post
@@ -40,7 +55,8 @@ class CauseSerializer(serializers.ModelSerializer):
         slug_field='name',
         queryset=models.Category1.objects.all()
     )
-    image = serializers.ReadOnlyField()  # unified output (from model property)
+    image = serializers.ReadOnlyField()
+    image_file = CloudinaryURLField(required=False, allow_null=True)
 
     class Meta:
         model = models.Cause
@@ -85,37 +101,13 @@ class CauseSerializer(serializers.ModelSerializer):
 
 
 class TestimonialSerializer(serializers.ModelSerializer):
-    image = serializers.ReadOnlyField()  # use model's @property
+    image = serializers.ReadOnlyField()
+    image_file = CloudinaryURLField(required=False, allow_null=True)
 
     class Meta:
         model = models.Testimonial
-        fields = ['id', 'name', 'role', 'rating', 'image', 'content']
-
-    def validate(self, data):
-        request = self.context.get('request')
-
-        # Try all possible keys (image_file, image_url, image)
-        image_file = (
-            data.get('image_file') or
-            (request and request.FILES.get('image_file')) or
-            (request and request.FILES.get('image'))
-        )
-        image_url = (
-            data.get('image_url') or
-            data.get('image') or
-            (request and request.data.get('image_url')) or
-            (request and request.data.get('image'))
-        )
-
-        if not image_file and not image_url:
-            raise serializers.ValidationError(
-                {"non_field_errors": ["Please provide either an image file or an image URL."]}
-            )
-
-        # Assign them properly for saving
-        data['image_file'] = image_file
-        data['image_url'] = image_url
-        return data
+        fields = ['id', 'name', 'role', 'rating', 'image', 'image_file', 'image_url', 'content']
+        read_only_fields = ['image']
 
         
 class VolunteerSerializer(serializers.ModelSerializer):
@@ -137,21 +129,27 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class GallarySerializer(serializers.ModelSerializer):
     category_name = serializers.SlugRelatedField(
-        slug_field='name',  # accept category name like "Cows"
+        slug_field='name',
         queryset=Category.objects.all()
     )
+    image = CloudinaryURLField(required=False, allow_null=True)
+    
     class Meta:
         model = Gallary
         fields = ['id', 'image', 'category_name', 'caption']
 
 
 class ProgramSerializer(serializers.ModelSerializer):
+    file_image = CloudinaryURLField(required=False, allow_null=True)
+    
     class Meta:
         model = models.Program
         fields = ['id', 'title', 'description', 'file_image', 'url_image', 'created_at']
 
 
 class DonationSerializer(serializers.ModelSerializer):
+    uploaded_receipt = CloudinaryURLField(required=False, allow_null=True)
+    
     class Meta:
         model = models.Donation
         fields = [
