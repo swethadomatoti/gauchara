@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils.text import slugify
+from cloudinary.models import CloudinaryField
 
 class CustomUser(AbstractUser):
     
@@ -18,8 +19,7 @@ class Post(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     excerpt = models.TextField(blank=True, null=True)
     content = models.TextField()
-    # Hybrid field — can store upload file path or remote URL string
-    featured_image = models.ImageField(upload_to='uploads/', blank=True, null=True,max_length=500)
+    featured_image = CloudinaryField('image', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
@@ -39,15 +39,11 @@ class Post(models.Model):
 
     @property
     def image_url(self):
-        """Return full URL for uploaded or remote images."""
+        """Return URL for the featured image from Cloudinary."""
         if not self.featured_image:
             return None
-        image_str = str(self.featured_image)
-        # Return remote URLs directly (Google, CDN, etc.)
-        if image_str.startswith('http'):
-            return image_str
-        # Return local uploaded image via MEDIA_URL
-        return f"/media/{image_str}"
+        # CloudinaryField automatically returns the Cloudinary URL
+        return str(self.featured_image.url) if hasattr(self.featured_image, 'url') else str(self.featured_image)
     
 class ContactMessage(models.Model):
     name = models.CharField(max_length=100)   
@@ -75,7 +71,7 @@ class Cause(models.Model):
     category = models.ForeignKey('Category1', on_delete=models.CASCADE)
     goal_amount = models.DecimalField(max_digits=10, decimal_places=2)
     featured = models.BooleanField(default=False)
-    image_file = models.ImageField(upload_to='uploads/', blank=True, null=True)
+    image_file = CloudinaryField('image', blank=True, null=True)
     image_url = models.URLField(blank=True, null=True)
     short_description = models.CharField(max_length=255)
     full_content = models.TextField()
@@ -87,14 +83,14 @@ class Cause(models.Model):
     @property
     def image(self):
         """
-        Unified image property: returns either the uploaded file's URL or the remote URL.
+        Unified image property: returns either the remote URL or the Cloudinary URL.
         """
         if self.image_url:
             # If a remote URL was provided
             return self.image_url
         elif self.image_file:
-            # If a local file was uploaded
-            return f"/media/{self.image_file}"
+            # If a file was uploaded to Cloudinary
+            return str(self.image_file.url) if hasattr(self.image_file, 'url') else str(self.image_file)
         return None
 
 
@@ -110,7 +106,7 @@ class Testimonial(models.Model):
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100)
     rating = models.IntegerField(choices=RATING_CHOICES)
-    image_file = models.ImageField(upload_to='uploads/', blank=True, null=True)
+    image_file = CloudinaryField('image', blank=True, null=True)
     image_url = models.URLField(blank=True, null=True)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -118,14 +114,14 @@ class Testimonial(models.Model):
     @property
     def image(self):
         """
-        Unified image property: returns either the uploaded file's URL or the remote URL.
+        Unified image property: returns either the remote URL or the Cloudinary URL.
         """
         if self.image_url:
             # If a remote URL was provided
             return self.image_url
         elif self.image_file:
-            # If a local file was uploaded
-            return f"/media/{self.image_file}"
+            # If a file was uploaded to Cloudinary
+            return str(self.image_file.url) if hasattr(self.image_file, 'url') else str(self.image_file)
         return None
     
 class volunteer(models.Model):
@@ -148,26 +144,21 @@ class volunteer(models.Model):
 
 class Gallary(models.Model):   
        
-    image = models.ImageField(upload_to='uploads/', blank=True, null=True)
+    image = CloudinaryField('image', blank=True, null=True)
     category_name = models.ForeignKey(Category, on_delete=models.CASCADE)
     caption = models.CharField(max_length=255, blank=True, null=True)
     @property
     def image_url(self):
-        """Return the correct URL for the image."""
+        """Return the correct URL for the image from Cloudinary."""
         if not self.image:
             return None
-
-        # If it's a full URL, return as-is
-        if str(self.image).startswith('http'):
-            return self.image
-
-        # Otherwise, serve it as a media file
-        return f"/media/{self.image}"
+        # CloudinaryField automatically returns the Cloudinary URL
+        return str(self.image.url) if hasattr(self.image, 'url') else str(self.image)
 
 class Program(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
-    file_image =models.ImageField(upload_to='uploads/', blank=True, null=True)
+    file_image = CloudinaryField('image', blank=True, null=True)
     url_image = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -196,7 +187,7 @@ class Donation(models.Model):
 
     final_amount = models.DecimalField(max_digits=10, decimal_places=2)
     region = models.CharField(choices=[('India', 'India'), ('International', 'International')], max_length=20)
-    uploaded_receipt = models.ImageField(upload_to='receipts/', blank=True, null=True)
+    uploaded_receipt = CloudinaryField('image', blank=True, null=True)
     payment_status = models.CharField(
         max_length=20,
         choices=[
