@@ -116,7 +116,7 @@ class VolunteerSerializer(serializers.ModelSerializer):
     availability = serializers.ChoiceField(choices=models.volunteer.AVAILABILITY_CHOICES, required=True)
     class Meta:
         model = models.volunteer
-        fields = ['full_name', 'age', 'email', 'phone', 'address', 'occupation', 'availability', 'skills', 'reason']
+        fields = ['id','full_name', 'age', 'email', 'phone', 'address', 'occupation', 'availability', 'skills', 'reason']
 
 from rest_framework import serializers
 from .models import Gallary, Category
