@@ -140,9 +140,15 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
+# Only add STATICFILES_DIRS if the directory exists (for development)
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+if os.path.exists(STATIC_DIR):
+    STATICFILES_DIRS = [STATIC_DIR]
+else:
+    STATICFILES_DIRS = []
+
+# Use Cloudinary for static files storage in production
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticCloudinaryStorage'
 
 AUTH_USER_MODEL = 'project.CustomUser'
 
@@ -204,9 +210,7 @@ SESSION_COOKIE_SECURE = True
 SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
 DEFAULT_FROM_EMAIL = "swethadomatoti3@gmail.com"
 
-#email of gauchara:savadiafoundation@gmail.com Password:viqolwgghbtdggvt 
  
-#redis://red-d6q3oo9aae7s73bkfh6g:6379
 REDIS_URL = os.environ.get("REDIS_URL")
 
 CELERY_BROKER_URL = os.environ.get("REDIS_URL")
