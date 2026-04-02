@@ -148,7 +148,7 @@ class ProgramSerializer(serializers.ModelSerializer):
 
 
 class DonationSerializer(serializers.ModelSerializer):
-    uploaded_receipt = CloudinaryURLField(required=False, allow_null=True)
+    uploaded_receipt = CloudinaryURLField(required=True, allow_null=True)
     
     class Meta:
         model = models.Donation
