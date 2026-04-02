@@ -14,7 +14,7 @@ def send_contact_email(name, email, phone, subject, message):
 
         mail = Mail(
             from_email=settings.DEFAULT_FROM_EMAIL,
-            to_emails="swethadomatoti3@gmail.com",
+            to_emails="savadiafoundation@gmail.com",
             subject=f"New Contact Form Message: {subject}",
             html_content=html_content,
         )
@@ -91,7 +91,7 @@ def send_donation_email(name, email, whatsapp_number, amount, status):
 
     admin_mail = Mail(
         from_email=settings.DEFAULT_FROM_EMAIL,
-        to_emails=["swethadomatoti3@gmail.com"],
+        to_emails=["savadiafoundation@gmail.com"],
         subject=f"Donation {status.capitalize()}",
         html_content=admin_html
     )
@@ -123,7 +123,7 @@ def send_volunteer_email(full_name, age, email, phone, address,
 
     message = Mail(
         from_email=settings.DEFAULT_FROM_EMAIL,
-        to_emails=["swethadomatoti3@gmail.com"],  # ADMIN ONLY
+        to_emails=["savadiafoundation@gmail.com"],  # ADMIN ONLY
         subject="New Volunteer Application",
         html_content=admin_html
     )
