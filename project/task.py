@@ -5,11 +5,38 @@ from django.conf import settings
 def send_contact_email(name, email, phone, subject, message):
     try:
         html_content = f"""
-        <p><strong>Name:</strong> {name}</p>
-        <p><strong>Email:</strong> {email}</p>
-        <p><strong>Phone:</strong> {phone}</p>
-        <p><strong>Subject:</strong> {subject}</p>
-        <p><strong>Message:</strong><br>{message}</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f9f9f9; padding: 20px; border-radius: 8px;">
+            <h2 style="color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px;">New Contact Form Message</h2>
+            
+            <div style="background-color: #ffffff; padding: 20px; border-radius: 6px; margin-top: 15px;">
+                <p style="margin: 12px 0; font-size: 14px;">
+                    <strong style="color: #34495e;">Name:</strong>
+                    <span style="color: #2c3e50;">{name}</span>
+                </p>
+                
+                <p style="margin: 12px 0; font-size: 14px;">
+                    <strong style="color: #34495e;">Email:</strong>
+                    <span style="color: #2c3e50;"><a href="mailto:{email}" style="color: #3498db; text-decoration: none;">{email}</a></span>
+                </p>
+                
+                <p style="margin: 12px 0; font-size: 14px;">
+                    <strong style="color: #34495e;">Phone:</strong>
+                    <span style="color: #2c3e50;">{phone}</span>
+                </p>
+                
+                <p style="margin: 12px 0; font-size: 14px;">
+                    <strong style="color: #34495e;">Subject:</strong>
+                    <span style="color: #2c3e50;">{subject}</span>
+                </p>
+                
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ecf0f1;">
+                    <strong style="color: #34495e; display: block; margin-bottom: 8px;">Message:</strong>
+                    <p style="color: #2c3e50; line-height: 1.6; font-size: 14px; white-space: pre-wrap;">{message}</p>
+                </div>
+            </div>
+            
+            <p style="color: #95a5a6; font-size: 12px; margin-top: 20px; text-align: center;">This is an automated message from GAUCHARA contact form.</p>
+        </div>
         """
 
         mail = Mail(
