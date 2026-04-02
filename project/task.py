@@ -65,18 +65,32 @@ def send_donation_email(name, email, whatsapp_number, amount, status):
         subject = "Donation Successful ❤️"
 
         user_html = f"""
-        <h2>Thank You ❤️</h2>
-        <p>Dear {name},</p>
-            <div>
-             <p>We sincerely thank you for your generous contribution towards GAUCHARA.</p>
-            <p>Your support helps us provide care, food, and shelter etc.. to cows in need.</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 20px; border-radius: 8px;">
+            <div style="background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <h2 style="color: #27ae60; text-align: center; font-size: 28px; margin: 0 0 10px 0;">Thank You ❤️</h2>
+                <p style="text-align: center; color: #7f8c8d; font-size: 14px; margin: 0 0 20px 0;">Your generosity makes a difference</p>
+                
+                <p style="color: #2c3e50; font-size: 16px; margin: 15px 0;">Dear {name},</p>
+                
+                <div style="background-color: #f0fdf4; border-left: 4px solid #27ae60; padding: 15px; border-radius: 4px; margin: 20px 0;">
+                    <p style="color: #2c3e50; font-size: 14px; line-height: 1.6; margin: 8px 0;">We sincerely thank you for your generous contribution towards GAUCHARA.</p>
+                    <p style="color: #2c3e50; font-size: 14px; line-height: 1.6; margin: 8px 0;">Your support helps us provide care, food, and shelter to cows in need.</p>
+                </div>
+                
+                <div style="background-color: #f9f9f9; padding: 15px; border-radius: 4px; margin: 20px 0;">
+                    <p style="margin: 10px 0; font-size: 14px;"><strong style="color: #34495e;">WhatsApp:</strong> <span style="color: #2c3e50;">{whatsapp_number}</span></p>
+                    <p style="margin: 10px 0; font-size: 14px;"><strong style="color: #34495e;">Email:</strong> <span style="color: #2c3e50;">{email}</span></p>
+                    <p style="margin: 10px 0; font-size: 14px;"><strong style="color: #34495e;">Donation Amount:</strong> <span style="color: #27ae60; font-weight: bold; font-size: 16px;">₹{amount}</span></p>
+                </div>
+                
+                <div style="background-color: #e8f8f5; padding: 15px; border-radius: 4px; margin: 20px 0;">
+                    <p style="text-align: center; font-size: 14px; color: #16a085; margin: 0; font-weight: bold;">✓ Status: {status.upper()}</p>
+                </div>
+                
+                <p style="text-align: center; color: #34495e; font-size: 16px; margin: 25px 0 10px 0;">🙏 Thank you for supporting Gau Seva</p>
+                <p style="text-align: center; color: #95a5a6; font-size: 12px; margin: 20px 0 0 0;">This is an automated message from GAUCHARA.</p>
             </div>
-        <p>Whatsapp: {whatsapp_number}</p>
-        <p>Email: {email}</p>
-        <p>Your donation of ₹{amount} was successful.</p>
-        <p>Status: {status}</p>
-        
-        <p>🙏 Thank you for supporting Gau Seva</p>
+        </div>
         """
 
     # FAILED EMAIL
@@ -85,17 +99,33 @@ def send_donation_email(name, email, whatsapp_number, amount, status):
         subject = "Donation Failed ❌"
 
         user_html = f"""
-        <h2>Donation Failed</h2>
-        <p>Dear {name},</p>
-            <div
-            <p>We regret to inform you that your donation could not be processed successfully.</p>
-            <p>This may be due to a payment issue or network interruption.</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #fef5e7 0%, #f9e79f 100%); padding: 20px; border-radius: 8px;">
+            <div style="background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <h2 style="color: #e74c3c; text-align: center; font-size: 28px; margin: 0 0 10px 0;">Donation Failed ❌</h2>
+                <p style="text-align: center; color: #7f8c8d; font-size: 14px; margin: 0 0 20px 0;">We need your assistance</p>
+                
+                <p style="color: #2c3e50; font-size: 16px; margin: 15px 0;">Dear {name},</p>
+                
+                <div style="background-color: #ffe6e6; border-left: 4px solid #e74c3c; padding: 15px; border-radius: 4px; margin: 20px 0;">
+                    <p style="color: #2c3e50; font-size: 14px; line-height: 1.6; margin: 8px 0;">We regret to inform you that your donation could not be processed successfully.</p>
+                    <p style="color: #2c3e50; font-size: 14px; line-height: 1.6; margin: 8px 0;">This may be due to a payment issue or network interruption.</p>
+                </div>
+                
+                <div style="background-color: #f9f9f9; padding: 15px; border-radius: 4px; margin: 20px 0;">
+                    <p style="margin: 10px 0; font-size: 14px;"><strong style="color: #34495e;">WhatsApp:</strong> <span style="color: #2c3e50;">{whatsapp_number}</span></p>
+                    <p style="margin: 10px 0; font-size: 14px;"><strong style="color: #34495e;">Email:</strong> <span style="color: #2c3e50;">{email}</span></p>
+                    <p style="margin: 10px 0; font-size: 14px;"><strong style="color: #34495e;">Attempted Amount:</strong> <span style="color: #e74c3c; font-weight: bold; font-size: 16px;">₹{amount}</span></p>
+                </div>
+                
+                <div style="background-color: #fadbd8; padding: 15px; border-radius: 4px; margin: 20px 0;">
+                    <p style="text-align: center; font-size: 14px; color: #c0392b; margin: 0 0 10px 0; font-weight: bold;">✗ Status: {status.upper()}</p>
+                    <p style="text-align: center; font-size: 14px; color: #2c3e50; margin: 0;">Please try again or contact us for assistance.</p>
+                </div>
+                
+                <p style="text-align: center; color: #34495e; font-size: 16px; margin: 25px 0 0 0;">We're here to help if you need any support.</p>
+                <p style="text-align: center; color: #95a5a6; font-size: 12px; margin: 20px 0 0 0;">This is an automated message from GAUCHARA.</p>
             </div>
-        <p>Whatsapp: {whatsapp_number}</p>
-        <p>Email: {email}</p>
-        <p>Status: {status}</p>
-        <p>Your donation of ₹{amount} has failed.</p>
-        <p>Please try again.</p>
+        </div>
         """
 
     # USER EMAIL
@@ -108,12 +138,38 @@ def send_donation_email(name, email, whatsapp_number, amount, status):
 
     # ADMIN EMAIL (same for both)
     admin_html = f"""
-    <h2>Donation Update</h2>
-    <p>Status: {status}</p>
-    <p>Name: {name}</p>
-    <p>Email: {email}</p>
-    <p>WhatsApp: {whatsapp_number}</p>
-    <p>Amount: ₹{amount}</p>
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f9f9f9; padding: 20px; border-radius: 8px;">
+        <h2 style="color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; margin-bottom: 20px;">Donation Update - {status.upper()}</h2>
+        
+        <div style="background-color: #ffffff; padding: 20px; border-radius: 6px;">
+            <p style="margin: 12px 0; font-size: 14px;">
+                <strong style="color: #34495e;">Status:</strong>
+                <span style="background-color: {'#27ae60' if status == 'success' else '#e74c3c'}; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold;">{status.upper()}</span>
+            </p>
+            
+            <p style="margin: 12px 0; font-size: 14px;">
+                <strong style="color: #34495e;">Donor Name:</strong>
+                <span style="color: #2c3e50;">{name}</span>
+            </p>
+            
+            <p style="margin: 12px 0; font-size: 14px;">
+                <strong style="color: #34495e;">Email:</strong>
+                <span style="color: #2c3e50;"><a href="mailto:{email}" style="color: #3498db; text-decoration: none;">{email}</a></span>
+            </p>
+            
+            <p style="margin: 12px 0; font-size: 14px;">
+                <strong style="color: #34495e;">WhatsApp:</strong>
+                <span style="color: #2c3e50;">{whatsapp_number}</span>
+            </p>
+            
+            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ecf0f1;">
+                <strong style="color: #34495e; display: block; margin-bottom: 8px;">Donation Amount:</strong>
+                <p style="color: #27ae60; font-size: 18px; font-weight: bold; margin: 0;">₹{amount}</p>
+            </div>
+        </div>
+        
+        <p style="color: #95a5a6; font-size: 12px; margin-top: 20px; text-align: center;">Admin notification from GAUCHARA donation system.</p>
+    </div>
     """
 
     admin_mail = Mail(
@@ -135,17 +191,58 @@ def send_volunteer_email(full_name, age, email, phone, address,
     print("VOLUNTEER EMAIL SENT TO ADMIN")
 
     admin_html = f"""
-    <h2>New Volunteer Registration</h2>
-
-    <p><b>Name:</b> {full_name}</p>
-    <p><b>Age:</b> {age}</p>
-    <p><b>Email:</b> {email}</p>
-    <p><b>Phone:</b> {phone}</p>
-    <p><b>Address:</b> {address}</p>
-    <p><b>Occupation:</b> {occupation}</p>
-    <p><b>Availability:</b> {availability}</p>
-    <p><b>Skills:</b> {skills}</p>
-    <p><b>Reason:</b> {reason}</p>
+    <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; background-color: #f9f9f9; padding: 20px; border-radius: 8px;">
+        <h2 style="color: #2c3e50; border-bottom: 3px solid #9b59b6; padding-bottom: 10px; margin-bottom: 20px;">New Volunteer Registration</h2>
+        
+        <div style="background-color: #ffffff; padding: 20px; border-radius: 6px;">
+            <p style="margin: 12px 0; font-size: 14px;">
+                <strong style="color: #34495e;">Full Name:</strong>
+                <span style="color: #2c3e50;">{full_name}</span>
+            </p>
+            
+            <p style="margin: 12px 0; font-size: 14px;">
+                <strong style="color: #34495e;">Age:</strong>
+                <span style="color: #2c3e50;">{age}</span>
+            </p>
+            
+            <p style="margin: 12px 0; font-size: 14px;">
+                <strong style="color: #34495e;">Email:</strong>
+                <span style="color: #2c3e50;"><a href="mailto:{email}" style="color: #3498db; text-decoration: none;">{email}</a></span>
+            </p>
+            
+            <p style="margin: 12px 0; font-size: 14px;">
+                <strong style="color: #34495e;">Phone:</strong>
+                <span style="color: #2c3e50;">{phone}</span>
+            </p>
+            
+            <p style="margin: 12px 0; font-size: 14px;">
+                <strong style="color: #34495e;">Address:</strong>
+                <span style="color: #2c3e50;">{address}</span>
+            </p>
+            
+            <p style="margin: 12px 0; font-size: 14px;">
+                <strong style="color: #34495e;">Occupation:</strong>
+                <span style="color: #2c3e50;">{occupation}</span>
+            </p>
+            
+            <p style="margin: 12px 0; font-size: 14px;">
+                <strong style="color: #34495e;">Availability:</strong>
+                <span style="color: #2c3e50;">{availability}</span>
+            </p>
+            
+            <p style="margin: 12px 0; font-size: 14px;">
+                <strong style="color: #34495e;">Skills:</strong>
+                <span style="color: #2c3e50;">{skills}</span>
+            </p>
+            
+            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ecf0f1;">
+                <strong style="color: #34495e; display: block; margin-bottom: 8px;">Reason for Volunteering:</strong>
+                <p style="color: #2c3e50; line-height: 1.6; font-size: 14px; margin: 0; white-space: pre-wrap;">{reason}</p>
+            </div>
+        </div>
+        
+        <p style="color: #95a5a6; font-size: 12px; margin-top: 20px; text-align: center;">New volunteer application from GAUCHARA platform.</p>
+    </div>
     """
 
     message = Mail(
