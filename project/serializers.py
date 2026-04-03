@@ -101,13 +101,34 @@ class CauseSerializer(serializers.ModelSerializer):
 
 
 class TestimonialSerializer(serializers.ModelSerializer):
-    image = serializers.ReadOnlyField()
+    # Incoming payload may provide image via this alias.
+    # Writes to image_url field and still allows image_file uploads.
+    image = serializers.URLField(source='image_url', required=False, allow_null=True)
     image_file = CloudinaryURLField(required=False, allow_null=True)
 
     class Meta:
         model = models.Testimonial
         fields = ['id', 'name', 'role', 'rating', 'image', 'image_file', 'image_url', 'content']
-        read_only_fields = ['image']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        # Legacy fallback: if image_url is empty and image_file exists in DB
+        if not data.get('image') and instance.image_file:
+            data['image'] = str(instance.image_file)
+        return data
+
+    def validate(self, data):
+        # Accept both image and image_url keys in input.
+        image_url = data.get('image_url') or data.get('image_file') and None
+        image_file = data.get('image_file')
+
+        # If the client sent "image" as alias for URL, ModelSerializer source handles it.
+        # No strict requirement here to allow partial data.
+
+        # If image_url and image_file both missing, keep null (optional field)
+        # for backward compatibility and value injection.
+
+        return data
 
         
 class VolunteerSerializer(serializers.ModelSerializer):
