@@ -101,32 +101,45 @@ class CauseSerializer(serializers.ModelSerializer):
 
 
 class TestimonialSerializer(serializers.ModelSerializer):
-    # Incoming payload may provide image via this alias.
-    # Writes to image_url field and still allows image_file uploads.
-    image = serializers.URLField(source='image_url', required=False, allow_null=True)
+    image = serializers.SerializerMethodField()
     image_file = CloudinaryURLField(required=False, allow_null=True)
+    image_url = serializers.URLField(required=False, allow_blank=True, allow_null=True)
 
     class Meta:
         model = models.Testimonial
         fields = ['id', 'name', 'role', 'rating', 'image', 'image_file', 'image_url', 'content']
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        # Legacy fallback: if image_url is empty and image_file exists in DB
-        if not data.get('image') and instance.image_file:
-            data['image'] = str(instance.image_file)
-        return data
+    def get_image(self, obj):
+        if obj.image_url:
+            return obj.image_url
+        if obj.image_file:
+            return str(obj.image_file)
+        return None
 
     def validate(self, data):
-        # Accept both image and image_url keys in input.
-        image_url = data.get('image_url') or data.get('image_file') and None
+        request = self.context.get('request')
+
         image_file = data.get('image_file')
+        image_url = data.get('image_url')
 
-        # If the client sent "image" as alias for URL, ModelSerializer source handles it.
-        # No strict requirement here to allow partial data.
+        if request is not None:
+            # multipart form-data with file input key `image`
+            if not image_file and 'image' in request.FILES:
+                image_file = request.FILES.get('image')
 
-        # If image_url and image_file both missing, keep null (optional field)
-        # for backward compatibility and value injection.
+            # JSON / form field `image` as URL
+            if not image_url and request.data.get('image'):
+                image_value = request.data.get('image')
+                if isinstance(image_value, str) and image_value.strip():
+                    image_url = image_value
+
+        data['image_file'] = image_file
+        data['image_url'] = image_url
+
+        if not image_file and not image_url:
+            raise serializers.ValidationError(
+                {'non_field_errors': ['Please provide either image file or image URL.']}
+            )
 
         return data
 
