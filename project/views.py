@@ -16,7 +16,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.decorators import method_decorator
 from django.conf import settings
-from .task import send_contact_email, send_donation_email, send_volunteer_email
+from .task import send_contact_email, send_donation_email, send_donation_submission_email, send_volunteer_email
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -423,6 +423,13 @@ class DonationCreateView(APIView):
             donation = serializer.save(
                 final_amount=final_amount,
                 payment_status="pending"   
+            )
+
+            send_donation_submission_email(
+                donation.full_name,
+                donation.email,
+                donation.whatsapp_number or "uploaded receipt",
+                donation.final_amount
             )
 
             return Response(

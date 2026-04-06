@@ -55,6 +55,40 @@ def send_contact_email(name, email, phone, subject, message):
     except Exception as e:
         print(" EMAIL ERROR:", str(e))
 
+
+def send_donation_submission_email(name, email, whatsapp_number, amount):
+
+    try:
+        subject = "New Donation Submitted - Pending Approval"
+        html_content = f"""
+        <div style="font-family: Arial, sans-serif; max-width: 650px; margin: 0 auto; background-color: #f9f9f9; padding: 20px; border-radius: 8px;">
+            <h2 style="color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px;">New Donation Received</h2>
+            <div style="background-color: #ffffff; padding: 20px; border-radius: 6px; margin-top: 15px;">
+                <p style="margin: 12px 0; font-size: 14px;"><strong style="color: #34495e;">Donor Name:</strong> <span style="color: #2c3e50;">{name}</span></p>
+                <p style="margin: 12px 0; font-size: 14px;"><strong style="color: #34495e;">Email:</strong> <span style="color: #2c3e50;"><a href="mailto:{email}" style="color: #3498db; text-decoration: none;">{email}</a></span></p>
+                <p style="margin: 12px 0; font-size: 14px;"><strong style="color: #34495e;">WhatsApp:</strong> <span style="color: #2c3e50;">{whatsapp_number}</span></p>
+                <p style="margin: 12px 0; font-size: 14px;"><strong style="color: #34495e;">Donation Amount:</strong> <span style="color: #27ae60; font-weight: bold;">₹{amount}</span></p>
+                <p style="margin: 18px 0 0 0; font-size: 14px; color: #2c3e50;">This donation is pending approval. Please check the admin panel for the new donation entry.</p>
+            </div>
+            <p style="color: #95a5a6; font-size: 12px; margin-top: 20px; text-align: center;">Admin notification from GAUCHARA donation system.</p>
+        </div>
+        """
+
+        mail = Mail(
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to_emails=["savadiafoundation@gmail.com"],
+            subject=subject,
+            html_content=html_content,
+        )
+
+        sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
+        response = sg.send(mail)
+        print("DONATION SUBMISSION EMAIL STATUS:", response.status_code)
+
+    except Exception as e:
+        print(" DONATION SUBMISSION EMAIL ERROR:", str(e))
+
+
 def send_donation_email(name, email, whatsapp_number, amount, status):
 
     print("EMAIL TRIGGERED:", status)
