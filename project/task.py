@@ -63,13 +63,15 @@ def send_donation_submission_email(name=None, email=None, whatsapp_number=None, 
 
         # ✅ Correct Quick Pay detection
         is_quick_pay = not name and not email and not whatsapp_number
+         
+        display_amount = "Quick Pay" if is_quick_pay else f"₹{amount or 0}"
+
 
         # =========================
         # 🟠 QUICK PAY TEMPLATE
         # =========================
         if is_quick_pay:
-          final_amount = "Quick Pay"  # store safe value
-
+           
           html_content = f"""
             <div style="font-family: Arial; max-width: 650px; margin: auto; background:#f9f9f9; padding:20px; border-radius:8px;">
                 
@@ -83,7 +85,7 @@ def send_donation_submission_email(name=None, email=None, whatsapp_number=None, 
                     <p>
                         <strong>Donation Amount:</strong> 
                         <span style="color:#27ae60; font-weight:bold;">
-                            {final_amount}
+                            {display_amount}
                         </span>
                     </p>
 
@@ -105,8 +107,7 @@ def send_donation_submission_email(name=None, email=None, whatsapp_number=None, 
         # 🔵 NORMAL TEMPLATE
         # =========================
         else:
-            final_amount = amount
-
+            
             html_content = f"""
             <div style="font-family: Arial; max-width: 650px; margin: auto; background:#f9f9f9; padding:20px; border-radius:8px;">
                 
@@ -124,7 +125,7 @@ def send_donation_submission_email(name=None, email=None, whatsapp_number=None, 
                     <p>
                         <strong>Donation Amount:</strong> 
                         <span style="color:#27ae60; font-weight:bold;">
-                            ₹{amount}
+                            ₹{display_amount}
                         </span>
                     </p>
 

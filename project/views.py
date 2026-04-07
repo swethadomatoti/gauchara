@@ -419,16 +419,36 @@ class DonationCreateView(APIView):
             selected = serializer.validated_data.get("selected_amount")
             custom = serializer.validated_data.get("custom_amount")
 
-            final_amount = custom if custom else selected
+            name = serializer.validated_data.get("full_name")
+            email = serializer.validated_data.get("email")
+            whatsapp = serializer.validated_data.get("whatsapp_number")
+
+            # ✅ Detect Quick Pay
+            is_quick_pay = not name and not email and not whatsapp
+
+            # ✅ FIX: Always assign value (NO NULL)
+            if is_quick_pay:
+                final_amount = 0   # ✅ VERY IMPORTANT FIX
+            else:
+                final_amount = custom if custom else selected
+
+                # Optional safety
+                if not final_amount:
+                    return Response(
+                        {"error": "Amount is required"},
+                        status=400
+                    )
+
             donation = serializer.save(
                 final_amount=final_amount,
-                payment_status="pending"   
+                payment_status="pending"
             )
 
+            # ✅ Send Email
             send_donation_submission_email(
                 donation.full_name,
                 donation.email,
-                donation.whatsapp_number or "uploaded receipt",
+                donation.whatsapp_number,
                 donation.final_amount
             )
 
