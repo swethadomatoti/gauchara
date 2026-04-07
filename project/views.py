@@ -463,6 +463,13 @@ class DonationListView(APIView):
         serializer = DonationSerializer(donations, many=True)
 
         return Response(serializer.data)
+    def delete(self, request, pk):
+        try:
+            donation = Donation.objects.get(pk=pk)
+            donation.delete()
+            return Response({"message": "Donation record deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        except Donation.DoesNotExist:
+            return Response({"error": "Donation record not found."}, status=status.HTTP_404_NOT_FOUND)
 
 class DonationStatusUpdateView(APIView):
     authentication_classes = [JWTAuthentication]
