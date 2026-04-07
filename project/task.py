@@ -237,12 +237,14 @@ def send_donation_email(name, email, whatsapp_number, amount, status):
         """
 
     # USER EMAIL
-    user_mail = Mail(
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to_emails=[email],
-        subject=subject,
-        html_content=user_html
-    )
+    user_mail = None
+    if email:
+        user_mail = Mail(
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to_emails=[email],
+            subject=subject,
+            html_content=user_html
+        )
 
     # ADMIN EMAIL (same for both)
     admin_html = f"""
@@ -289,9 +291,16 @@ def send_donation_email(name, email, whatsapp_number, amount, status):
 
     sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
 
-    sg.send(user_mail)
-    sg.send(admin_mail)
-    
+    if user_mail:
+        try:
+            sg.send(user_mail)
+        except Exception as e:
+            print("USER EMAIL HTTP ERROR:", str(e))
+            
+    try:
+        sg.send(admin_mail)
+    except Exception as e:
+        print("ADMIN EMAIL HTTP ERROR:", str(e))
 
 def send_volunteer_email(full_name, age, email, phone, address,
                          occupation, availability, skills, reason):
