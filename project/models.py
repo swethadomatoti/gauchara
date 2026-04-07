@@ -182,7 +182,7 @@ class Donation(models.Model):
     custom_amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     final_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    region = models.CharField(choices=[('India', 'India'), ('International', 'International')], max_length=20)
+    region = models.CharField(choices=[('India', 'India'), ('International', 'International')], max_length=20,blank=True)
     uploaded_receipt = CloudinaryField('image', blank=False, null=True)
     payment_status = models.CharField(
         max_length=20,
