@@ -416,6 +416,7 @@ class DonationCreateView(APIView):
 
         if serializer.is_valid():
 
+            # ✅ FIXED LOGIC
             selected = serializer.validated_data.get("selected_amount")
             custom = serializer.validated_data.get("custom_amount")
 
@@ -423,28 +424,20 @@ class DonationCreateView(APIView):
             email = serializer.validated_data.get("email")
             whatsapp = serializer.validated_data.get("whatsapp_number")
 
-            # ✅ Detect Quick Pay
-            is_quick_pay = not name and not email and not whatsapp
+            is_quick_pay = not selected and not custom
 
-            # ✅ FIX: Always assign value (NO NULL)
             if is_quick_pay:
-                final_amount = 0   # ✅ VERY IMPORTANT FIX
+                final_amount = 0
             else:
                 final_amount = custom if custom else selected
 
-                # Optional safety
-                if not final_amount:
-                    return Response(
-                        {"error": "Amount is required"},
-                        status=400
-                    )
-
+            # ✅ SAVE DATA
             donation = serializer.save(
                 final_amount=final_amount,
                 payment_status="pending"
             )
 
-            # ✅ Send Email
+            # ✅ SEND EMAIL (THIS LINE)
             send_donation_submission_email(
                 donation.full_name,
                 donation.email,
@@ -458,7 +451,6 @@ class DonationCreateView(APIView):
             )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
  
 class DonationListView(APIView):
     authentication_classes = [JWTAuthentication]

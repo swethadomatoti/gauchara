@@ -56,23 +56,25 @@ def send_contact_email(name, email, phone, subject, message):
         print(" EMAIL ERROR:", str(e))
 
 
+ 
+
 def send_donation_submission_email(name=None, email=None, whatsapp_number=None, amount=None):
 
     try:
         subject = "New Donation Submitted - Pending Approval"
 
-        # ✅ Correct Quick Pay detection
-        is_quick_pay = not name and not email and not whatsapp_number
-         
-        display_amount = "Quick Pay" if is_quick_pay else f"₹{amount or 0}"
+        # ✅ Correct Quick Pay detection (based on amount)
+        is_quick_pay = not amount or amount == 0
 
+        # ✅ Display logic
+        display_amount = "Quick Pay" if is_quick_pay else f"₹{amount}"
 
         # =========================
         # 🟠 QUICK PAY TEMPLATE
         # =========================
         if is_quick_pay:
-           
-          html_content = f"""
+
+            html_content = f"""
             <div style="font-family: Arial; max-width: 650px; margin: auto; background:#f9f9f9; padding:20px; border-radius:8px;">
                 
                 <h2 style="color:#e67e22;">Quick Pay Donation Received</h2>
@@ -107,7 +109,7 @@ def send_donation_submission_email(name=None, email=None, whatsapp_number=None, 
         # 🔵 NORMAL TEMPLATE
         # =========================
         else:
-            
+
             html_content = f"""
             <div style="font-family: Arial; max-width: 650px; margin: auto; background:#f9f9f9; padding:20px; border-radius:8px;">
                 
@@ -125,7 +127,7 @@ def send_donation_submission_email(name=None, email=None, whatsapp_number=None, 
                     <p>
                         <strong>Donation Amount:</strong> 
                         <span style="color:#27ae60; font-weight:bold;">
-                            ₹{display_amount}
+                            {display_amount}
                         </span>
                     </p>
 
@@ -157,6 +159,8 @@ def send_donation_submission_email(name=None, email=None, whatsapp_number=None, 
 
     except Exception as e:
         print("DONATION EMAIL ERROR:", str(e))
+
+    
 
 
 def send_donation_email(name, email, whatsapp_number, amount, status):
