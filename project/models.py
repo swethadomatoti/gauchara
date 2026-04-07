@@ -161,8 +161,8 @@ class Program(models.Model):
 
 class Donation(models.Model):
 
-    full_name = models.CharField(max_length=100)
-    email = models.EmailField()
+    full_name = models.CharField(max_length=100,blank=True)
+    email = models.EmailField(blank=True)
     whatsapp_number = models.CharField(max_length=15, blank=True, null=True)
     pan_number = models.CharField(max_length=20, blank=True, null=True)
 
